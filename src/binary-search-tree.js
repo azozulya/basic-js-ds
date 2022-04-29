@@ -35,6 +35,9 @@ class BinarySearchTree {
   }
 
   find(data) {
+    if(!data)
+      return;
+
     const root = this.ROOT;
 
 		if(data === root.data)
@@ -50,56 +53,51 @@ class BinarySearchTree {
 			return data > current.data ? findNode(current.right) : findNode(current.left);
 		}
     return findNode(root);
-	//	return data > root.data ? findNode(root.right) : findNode(root.left);
   }
 
   remove(data) {
-    //let node = this.ROOT;
+    const deleteNode = (node) => { 
+      if(!node)
+        return;
 
-    // if(data < node.data) {
-    //   let prev = node.left;
-    //   while(node.data !== data) { console.log(node);
-    //     prev = node;
-    //     node = node.left;
-    //   }
-    //   if(node.left === null && node.right === null) {
-    //     prev.left = null;
-    //   }
-    //   if(node.right === null) {
-    //     prev.left = node.left;
-    //   }
-    //   if(node.left === null) {
-    //     prev.left = node.right;
-    //   }
-    // }
-
-    const deleteNode = (node) => {
       if(data < node.data) {
-        return node.left = deleteNode(node.left);
+        node.left = deleteNode(node.left);
+        return node;
       } 
       
-      if(data > node.data)  
-        return node.right = deleteNode(node.right);
-
-      
-        // let prev = node.left;
-        // while(node.data !== data) { console.log(node);
-        //   prev = node;
-        //   node = node.left;
-        // }
-
-        console.log('delete node: ', node);
-      if(node.left === null) {
-        return node.right;
+      if(data > node.data) {
+        node.right = deleteNode(node.right);
+        return node;
       }
-      if(node.right === null) {
-        return node.left;
-      }
-     
       
+      if(data === node.data) {
+        if(node.left === null && node.right === null) {
+          return null;
+        }
+
+        if(node.left === null) {
+          node = node.right;
+          return node;
+        }
+
+        if(node.right === null) {
+          node = node.left;
+          return node;
+        }
+
+        let minRight = node.right;
+
+        while(minRight.left) {
+          minRight = minRight.left;
+        }
+
+        node.data = minRight.data;
+        data = minRight.data;
+        node.right = deleteNode(node.right);
+        return node;
+      }
     }
-
-    return this.ROOT = deleteNode(this.ROOT);    
+    this.ROOT = deleteNode(this.ROOT);
   }
 
   min() {
@@ -123,20 +121,20 @@ class BinarySearchTree {
   }
 }
 
-const tree = new BinarySearchTree();
-tree.add(10);
-tree.add(3);
-tree.add(6);
-tree.add(7);
-tree.add(2);
-//tree.add(4);
-tree.add(1);
-console.log('root1: ', tree.root()); 
-//console.log('find 3: ', tree.find(3));
-//console.log('min: ', tree.min());
-//console.log('max: ', tree.max());
-console.log(tree.remove(7));
-console.log('root2: ', tree.root());
+//const tree = new BinarySearchTree();
+// tree.add(10);
+// tree.add(3);
+// tree.add(6);
+// tree.add(7);
+// tree.add(2);
+// //tree.add(4);
+// tree.add(1);
+// //console.log('root1: ', tree.root()); 
+// //console.log('find 3: ', tree.find(3));
+// //console.log('min: ', tree.min());
+// //console.log('max: ', tree.max());
+// console.log(tree.remove(75));
+// console.log('root2: ', tree.root());
 
 // console.log('find 8: ', tree.find(8));
 //console.log('has 1: ', tree.has(3));
@@ -145,8 +143,45 @@ console.log('root2: ', tree.root());
 //             3
 //           /  \
 //          2    6
-//         /
-//        1
+//         /      \
+//        1        7
+
+
+// tree.add(9);
+// //tree.add(14);
+// tree.add(2);
+// tree.add(6);
+// tree.add(128);
+// tree.add(8);
+// tree.add(31);
+// tree.add(54);
+// tree.add(1);
+// //console.log('before remove 14: ', tree.root());
+// //tree.remove(14);
+// //tree.remove(8);
+// tree.remove(9);
+// console.log('final tree: ', tree.root());
+// console.log(tree.has(14)); //, false);
+//console.log(tree.has(8)); // false);
+// console.log(tree.has(9)); // false);
+// console.log(tree.has(2)); // true);
+// console.log(tree.has(6)); // true);
+// console.log(tree.has(12)); //), true);
+// console.log(tree.has(31)); //, true);
+// console.log(tree.has(54)); //, true);
+// console.log(tree.has(1)); // true);
+
+//                 9
+//               /   \
+//             2     14
+//           /  \     \
+//          1   6    128
+//               \    /
+//               8   31
+//                    \
+//                    54
+
+
 module.exports = {
   BinarySearchTree
 };
